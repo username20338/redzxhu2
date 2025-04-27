@@ -1,0 +1,266 @@
+-- Redz Library
+local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao143/Library-ui/refs/heads/main/Redzhubui"))()
+
+-- Criando a janela principal
+local Window = redzlib:MakeWindow({
+    Title = "redz Hub : Blox Fruits",
+    SubTitle = "by redz9999",
+    SaveFolder = "testando | redz lib v5.lua"
+})
+
+-- Adicionando botão de minimizar
+Window:AddMinimizeButton({
+    Button = { Image = "rbxassetid://93107657700314", BackgroundTransparency = 0 },
+    Corner = { CornerRadius = UDim.new(35, 1) },
+})
+
+-- Adicionando convite para o Discord
+local Tab1 = Window:MakeTab({"Um", "cherry"})
+Tab1:AddDiscordInvite({
+    Name = "Name Hub",
+    Description = "Join server",
+    Logo = "rbxassetid://18751483361",
+    Invite = "Link discord invite",
+})
+
+-- Definindo tema para a interface
+redzlib:SetTheme("Dark")
+
+-- Selecionando a primeira aba
+Window:SelectTab(Tab1)
+
+-- Adicionando seção na aba
+local Section = Tab1:AddSection({"Section"})
+
+-- Adicionando parágrafo
+local Paragraph = Tab1:AddParagraph({"Paragraph", "This is a Paragraph\nSecond Line"})
+
+-- Adicionando um diálogo
+local Dialog = Window:Dialog({
+    Title = "Dialog",
+    Text = "This is a Dialog",
+    Options = {
+        {"Confirm", function()
+            -- Ação do botão Confirm
+        end},
+        {"Maybe", function()
+            -- Ação do botão Maybe
+        end},
+        {"Cancel", function()
+            -- Ação do botão Cancel
+        end}
+    }
+})
+
+-- Adicionando botão para imprimir "Hello World!"
+Tab1:AddButton({"Print", function(Value)
+    print("Hello World!")
+end})
+
+-- Adicionando Toggle 1
+local Toggle1 = Tab1:AddToggle({
+    Name = "Toggle",
+    Description = "This is a <font color='rgb(88, 101, 242)'>Toggle</font> Example",
+    Default = false 
+})
+Toggle1:Callback(function(Value)
+    -- Callback da Toggle 1
+end)
+
+-- Adicionando Toggle 2
+Tab1:AddToggle({
+    Name = "Toggle",
+    Default = false,
+    Callback = function(v)
+        -- Callback da Toggle 2
+    end
+})
+
+-- Adicionando Slider para velocidade
+Tab1:AddSlider({
+    Name = "Speed",
+    Min = 1,
+    Max = 100,
+    Increase = 1,
+    Default = 16,
+    Callback = function(Value)
+        -- Callback para velocidade
+    end
+})
+
+-- Adicionando Dropdown
+local Dropdown = Tab1:AddDropdown({
+    Name = "Players List",
+    Description = "Select the <font color='rgb(88, 101, 242)'>Number</font>",
+    Options = {"one", "two", "three"},
+    Default = "two",
+    Flag = "dropdown teste",
+    Callback = function(Value)
+        -- Callback para dropdown
+    end
+})
+
+-- Adicionando Textbox
+Tab1:AddTextBox({
+    Name = "Name item",
+    Description = "1 Item on 1 Server", 
+    PlaceholderText = "item only",
+    Callback = function(Value)
+        -- Callback para o textbox
+    end
+})
+
+-----------------------------------------------------------------------------------------
+-- CÓDIGOS ADICIONAIS ABAIXO ORGANIZADOS EM NOVAS TABS
+-----------------------------------------------------------------------------------------
+
+-- Super Ring Parts
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local Workspace = game:GetService("Workspace")
+local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local Folder = Instance.new("Folder", Workspace)
+local Part = Instance.new("Part", Folder)
+local Attachment1 = Instance.new("Attachment", Part)
+Part.Anchored = true
+Part.CanCollide = false
+Part.Transparency = 1
+
+if not getgenv().Network then
+    getgenv().Network = {
+        BaseParts = {},
+        Velocity = Vector3.new(14.46262424, 14.46262424, 14.46262424)
+    }
+
+    Network.RetainPart = function(Part)
+        if typeof(Part) == "Instance" and Part:IsA("BasePart") and Part:IsDescendantOf(Workspace) then
+            table.insert(Network.BaseParts, Part)
+            Part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
+            Part.CanCollide = false
+        end
+    end
+
+    local function EnablePartControl()
+        LocalPlayer.ReplicationFocus = Workspace
+        RunService.Heartbeat:Connect(function()
+            sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+            for _, Part in pairs(Network.BaseParts) do
+                if Part:IsDescendantOf(Workspace) then
+                    Part.Velocity = Network.Velocity
+                end
+            end
+        end)
+    end
+
+    EnablePartControl()
+end
+
+local function ForcePart(v)
+    if v:IsA("Part") and not v.Anchored and not v.Parent:FindFirstChild("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
+        for _, x in next, v:GetChildren() do
+            if x:IsA("BodyAngularVelocity") or x:IsA("BodyForce") or x:IsA("BodyGyro") or x:IsA("BodyPosition") or x:IsA("BodyThrust") or x:IsA("BodyVelocity") or x:IsA("RocketPropulsion") then
+                x:Destroy()
+            end
+        end
+        if v:FindFirstChild("Attachment") then
+            v:FindFirstChild("Attachment"):Destroy()
+        end
+        if v:FindFirstChild("AlignPosition") then
+            v:FindFirstChild("AlignPosition"):Destroy()
+        end
+        if v:FindFirstChild("Torque") then
+            v:FindFirstChild("Torque"):Destroy()
+        end
+        v.CanCollide = false
+        local Torque = Instance.new("Torque", v)
+        Torque.Torque = Vector3.new(100000, 100000, 100000)
+        local AlignPosition = Instance.new("AlignPosition", v)
+        local Attachment2 = Instance.new("Attachment", v)
+        Torque.Attachment0 = Attachment2
+        AlignPosition.MaxForce = 9999999999999999
+        AlignPosition.MaxVelocity = math.huge
+        AlignPosition.Responsiveness = 200
+        AlignPosition.Attachment0 = Attachment2
+        AlignPosition.Attachment1 = Attachment1
+    end
+end
+
+-----------------------------------------------------------------------------------------
+-- Novas TABS para funções pedidas
+-----------------------------------------------------------------------------------------
+
+-- Tab: Fly/Noclip/ESP
+local TabFly = Window:MakeTab({"Fly / ESP", "flying"})
+
+TabFly:AddButton({"Enable Fly", function()
+    local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        local BodyGyro = Instance.new("BodyGyro", humanoidRootPart)
+        local BodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
+        BodyGyro.P = 9e4
+        BodyGyro.maxTorque = Vector3.new(9e9, 9e9, 9e9)
+        BodyGyro.cframe = humanoidRootPart.CFrame
+        BodyVelocity.velocity = Vector3.new(0, 0, 0)
+        BodyVelocity.maxForce = Vector3.new(9e9, 9e9, 9e9)
+    end
+end})
+
+TabFly:AddButton({"Enable Noclip", function()
+    RunService.Stepped:Connect(function()
+        if LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid") then
+            LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(11)
+        end
+    end)
+end})
+
+TabFly:AddButton({"Enable ESP", function()
+    for i,v in pairs(Players:GetPlayers()) do
+        if v ~= LocalPlayer then
+            local esp = Instance.new("BillboardGui", v.Character.Head)
+            esp.Size = UDim2.new(4,0,5.5,0)
+            esp.Adornee = v.Character.Head
+            esp.AlwaysOnTop = true
+            local name = Instance.new("TextLabel", esp)
+            name.Text = v.Name
+            name.TextColor3 = Color3.fromRGB(255, 0, 0)
+            name.BackgroundTransparency = 1
+            name.Size = UDim2.new(1,0,1,0)
+        end
+    end
+end})
+
+-- Tab: Contar Players
+local TabPlayers = Window:MakeTab({"Players", "players"})
+
+TabPlayers:AddButton({"Mostrar Quantidade de Players", function()
+    local count = #Players:GetPlayers()
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "Players no Servidor",
+        Text = "Existem "..count.." players nesse servidor!",
+        Duration = 5
+    })
+end})
+
+-- Tab: Fling (Sem Girar Igual Autista)
+local TabFling = Window:MakeTab({"Fling", "fling"})
+
+TabFling:AddButton({"Fling Normalizado", function()
+    local target = Players:GetPlayers()[2] -- Exemplo, 2º jogador
+    if target and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+        local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+        local targetHrp = target.Character:FindFirstChild("HumanoidRootPart")
+        if hrp and targetHrp then
+            hrp.CFrame = targetHrp.CFrame * CFrame.new(0, 0, 1)
+            for i = 1, 10 do
+                hrp.Velocity = Vector3.new(0,500,0)
+                task.wait()
+            end
+        end
+    end
+end})
+
+-----------------------------------------------------------------------------------------
