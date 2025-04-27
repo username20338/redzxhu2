@@ -3,9 +3,9 @@ local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/tbao1
 
 -- Criando a janela principal
 local Window = redzlib:MakeWindow({
-    Title = "redz Hub : Blox Fruits",
-    SubTitle = "by redz9999",
-    SaveFolder = "testando | redz lib v5.lua"
+    Title = "Redzxhuh : Universal Script",
+    SubTitle = "by ChatGpt",
+    SaveFolder = "LibraryCorno | redz lib v5.lua"
 })
 
 -- Adicionando botão de minimizar
